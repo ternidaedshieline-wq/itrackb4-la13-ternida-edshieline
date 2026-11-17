@@ -4,72 +4,64 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Movie;
+use App\Models\Genre;
 
 class MovieSeeder extends Seeder
 {
     public function run(): void
     {
+
+        $romance = Genre::create([
+            'name' => 'Romance'
+        ]);
+
+        $drama = Genre::create([
+            'name' => 'Drama'
+        ]);
+
+        $comedy = Genre::create([
+            'name' => 'Comedy'
+        ]);
+
+       
         Movie::create([
             'title' => 'The House of Us',
             'director' => 'Mae Cruz-Alviar',
-            'genre' => 'Romance / Drama',
             'year' => 2018,
-            'featured' => true,
-            'description' => 'A romantic drama about love and family.'
+            'featured' => 1,
+            'genre_id' => $romance->id,
         ]);
 
         Movie::create([
-            'title' => 'Hello, Love, Again',
+            'title' => 'Hello, Love, Goodbye',
             'director' => 'Cathy Garcia-Sampana',
-            'genre' => 'Romance',
-            'year' => 2024,
-            'featured' => true,
-            'description' => 'A story about love and second chances.'
-        ]);
-
-        Movie::create([
-            'title' => 'Barbie',
-            'director' => 'Greta Gerwig',
-            'genre' => 'Comedy / Self-help',
-            'year' => 2023,
-            'featured' => true,
-            'description' => 'Barbie discovers the real world.'
+            'year' => 2019,
+            'featured' => 1,
+            'genre_id' => $drama->id,
         ]);
 
         Movie::create([
             'title' => 'Four Sisters and a Wedding',
-            'director' => 'Cathy Garcia-Sampana',
-            'genre' => 'Drama',
+            'director' => 'Cathy Garcia-Molina',
             'year' => 2013,
-            'featured' => false,
-            'description' => 'Four sisters reunite for a family wedding.'
+            'featured' => 0,
+            'genre_id' => $drama->id,
         ]);
 
         Movie::create([
-            'title' => 'Everything Everywhere All at Once',
-            'director' => 'Daniel Kwan and Daniel Scheinert',
-            'genre' => 'Sci-Fi',
-            'year' => 2022,
-            'featured' => true,
-            'description' => 'A woman discovers multiple universes.'
+            'title' => 'The Super Parental Guardians',
+            'director' => 'Joyce Bernal',
+            'year' => 2016,
+            'featured' => 0,
+            'genre_id' => $comedy->id,
         ]);
 
         Movie::create([
-            'title' => 'Crazy Rich Asians',
-            'director' => 'Jon M. Chu',
-            'genre' => 'Romance',
-            'year' => 2018,
-            'featured' => false,
-            'description' => 'A woman discovers her boyfriends wealthy family.'
-        ]);
-
-        Movie::create([
-            'title' => 'Avengers: Endgame',
-            'director' => 'Anthony and Joe Russo',
-            'genre' => 'Action',
-            'year' => 2019,
-            'featured' => true,
-            'description' => 'The Avengers attempt to save the universe.'
+            'title' => 'My Ex and Whys',
+            'director' => 'Cathy Garcia-Molina',
+            'year' => 2017,
+            'featured' => 0,
+            'genre_id' => $romance->id,
         ]);
     }
 }

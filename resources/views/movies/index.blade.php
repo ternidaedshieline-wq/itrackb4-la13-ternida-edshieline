@@ -20,20 +20,12 @@
             Featured
         </a>
 
-        <a href="{{ route('movies.index', ['genre' => 'Sci-Fi']) }}"
-           class="btn btn-info">
-            Sci-Fi
-        </a>
-
-        <a href="{{ route('movies.index', ['genre' => 'Action']) }}"
-           class="btn btn-warning">
-            Action
-        </a>
-
-        <a href="{{ route('movies.index', ['genre' => 'Crime']) }}"
-           class="btn btn-danger">
-            Crime
-        </a>
+        @foreach ($genres as $g)
+            <a href="{{ route('movies.index', ['genre_id' => $g->id]) }}"
+               class="btn btn-info">
+                {{ $g->name }}
+            </a>
+        @endforeach
 
     </div>
 
@@ -51,52 +43,27 @@
 
                 <div class="row">
 
-                    <div class="col-md-5">
+                    <div class="col-md-10">
 
                         <label class="form-label">
                             Genre
                         </label>
 
-                        <select name="genre"
+                        <select name="genre_id"
                                 class="form-select">
 
                             <option value="">
                                 All Genres
                             </option>
 
-                            <option value="Sci-Fi"
-                                @selected($genre == 'Sci-Fi')>
-                                Sci-Fi
-                            </option>
-
-                            <option value="Action"
-                                @selected($genre == 'Action')>
-                                Action
-                            </option>
-
-                            <option value="Crime"
-                                @selected($genre == 'Crime')>
-                                Crime
-                            </option>
+                            @foreach ($genres as $g)
+                                <option value="{{ $g->id }}"
+                                    @selected($genre_id == $g->id)>
+                                    {{ $g->name }}
+                                </option>
+                            @endforeach
 
                         </select>
-
-                    </div>
-
-
-                    <div class="col-md-5">
-
-                        <label class="form-label">
-                            Search
-                        </label>
-
-                        <input
-                            type="text"
-                            name="search"
-                            value="{{ $search }}"
-                            class="form-control"
-                            placeholder="Search movie..."
-                        >
 
                     </div>
 
@@ -143,24 +110,26 @@
 
                 <tr>
 
-                    <td>{{ $movie['id'] }}</td>
+                    <td>{{ $movie->id }}</td>
 
-                    <td>{{ $movie['title'] }}</td>
+                    <td>{{ $movie->title }}</td>
 
-                    <td>{{ $movie['director'] }}</td>
+                    <td>{{ $movie->director }}</td>
 
-                    <td>{{ $movie['genre'] }}</td>
+                    <td>{{ $movie->genre->name }}</td>
 
-                    <td>{{ $movie['year'] }}</td>
+                    <td>{{ $movie->year }}</td>
 
                     <td>
+                        <a href="{{ route('movies.show', $movie) }}" class="btn btn-info btn-sm">View</a>
+                        <a href="{{ route('movies.edit', $movie) }}" class="btn btn-warning btn-sm">Edit</a>
 
-                        <a
-                            href="{{ route('movies.show', $movie['id']) }}"
-                            class="btn btn-info btn-sm">
-                            View
-                        </a>
-
+                        <form action="{{ route('movies.destroy', $movie) }}" method="POST"
+                              onsubmit="return confirm('Delete this movie?')" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
                     </td>
 
                 </tr>

@@ -12,10 +12,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('director');
-            $table->string('genre');
             $table->integer('year');
+            $table->string('genre');
             $table->boolean('featured')->default(false);
-            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

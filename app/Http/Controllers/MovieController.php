@@ -9,25 +9,40 @@ use App\Models\Genre;
 
 class MovieController extends Controller
 {
-    public function index(Request $request)
-    {
-        $genre_id = $request->query('genre_id');
+ public function index(Request $request)
+{
+    $genre_id = $request->query('genre_id');
+    $search   = $request->query('search');
+    $featured = $request->query('featured');
+    $sort     = $request->query('sort', 'title');
 
-        $query = Movie::withh('genre');
-
-        if ($genre_id) {
-            $query = $query->where('genre_id', $genre_id);
-        }
-
-        $movies = $query->get();
-        $genres = Genre::all();
-
-        return view('movies.index', [
-            'movies'   => $movies,
-            'genres'   => $genres,
-            'genre_id' => $genre_id,
-        ]);
+    if (! in_array($sort, ['title', 'year'])) {
+        $sort = 'title';
     }
+
+    $query = Movie::with('genre');
+
+    if ($search) {
+        $query = $query->where('title', 'like', "%{$search}%");
+    }
+
+    if ($genre_id) {
+        $query = $query->where('genre_id', $genre_id);
+    }
+
+    if ($featured !== null && $featured !== '') {
+        $query = $query->where('featured', $featured);
+    }
+
+    $movies = $query->orderBy($sort)->paginate(8)->withQueryString();
+    $genres = Genre::all();
+
+    return view('movies.index', [
+        'movies'   => $movies,
+        'genres'   => $genres,
+        'genre_id' => $genre_id,
+    ]);
+}
 
     public function create()
     {

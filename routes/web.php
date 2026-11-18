@@ -1,11 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MovieController;
 
-Route::get('/', [MovieController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Must stay ABOVE the resource line, or "featured" is read as {movie}
+// Must stay ABOVE the resource line
 Route::get('/movies/featured', [MovieController::class, 'featured'])
     ->name('movies.featured');
 

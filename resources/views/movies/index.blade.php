@@ -33,53 +33,54 @@
     <div class="card mb-4">
 
         <div class="card-header">
-            Filter Movies
+            Search and Filter Movies
         </div>
 
         <div class="card-body">
 
-            <form method="GET"
-                  action="{{ route('movies.index') }}">
+            <form method="GET" action="{{ route('movies.index') }}">
+                <div class="row g-2">
 
-                <div class="row">
-
-                    <div class="col-md-10">
-
-                        <label class="form-label">
-                            Genre
-                        </label>
-
-                        <select name="genre_id"
-                                class="form-select">
-
-                            <option value="">
-                                All Genres
-                            </option>
-
-                            @foreach ($genres as $g)
-                                <option value="{{ $g->id }}"
-                                    @selected($genre_id == $g->id)>
-                                    {{ $g->name }}
-                                </option>
-                            @endforeach
-
-                        </select>
-
+                    <div class="col-md-3">
+                        <label class="form-label">Search title</label>
+                        <input type="text" name="search" value="{{ request('search') }}"
+                               class="form-control" placeholder="Search movie...">
                     </div>
 
+                    <div class="col-md-2">
+                        <label class="form-label">Genre</label>
+                        <select name="genre_id" class="form-select">
+                            <option value="">All Genres</option>
+                            @foreach ($genres as $g)
+                                <option value="{{ $g->id }}"
+                                    @selected(request('genre_id') == $g->id)>{{ $g->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                    <div class="col-md-2 d-flex align-items-end">
+                    <div class="col-md-2">
+                        <label class="form-label">Featured</label>
+                        <select name="featured" class="form-select">
+                            <option value="">Any</option>
+                            <option value="1" @selected(request('featured') === '1')>Featured only</option>
+                            <option value="0" @selected(request('featured') === '0')>Not featured</option>
+                        </select>
+                    </div>
 
-                        <button
-                            type="submit"
-                            class="btn btn-primary w-100">
-                            Filter
-                        </button>
+                    <div class="col-md-2">
+                        <label class="form-label">Sort by</label>
+                        <select name="sort" class="form-select">
+                            <option value="title" @selected(request('sort', 'title') === 'title')>Title</option>
+                            <option value="year" @selected(request('sort') === 'year')>Year</option>
+                        </select>
+                    </div>
 
+                    <div class="col-md-3 d-flex align-items-end gap-2">
+                        <button class="btn btn-primary">Apply</button>
+                        <a href="{{ route('movies.index') }}" class="btn btn-secondary">Clear</a>
                     </div>
 
                 </div>
-
             </form>
 
         </div>
@@ -151,6 +152,7 @@
 
     </table>
 
+    {{ $movies->links() }}
 
     <div class="text-center mt-4">
 

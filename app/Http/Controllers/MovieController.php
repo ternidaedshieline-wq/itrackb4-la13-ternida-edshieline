@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Models\Movie;
 use App\Models\Genre;
 
@@ -12,7 +13,7 @@ class MovieController extends Controller
     {
         $genre_id = $request->query('genre_id');
 
-        $query = Movie::with('genre');
+        $query = Movie::withh('genre');
 
         if ($genre_id) {
             $query = $query->where('genre_id', $genre_id);
@@ -44,7 +45,11 @@ class MovieController extends Controller
             'genre_id' => 'required|exists:genres,id',
         ]);
 
-        Movie::create($validated);
+        $movie = Movie::create($validated);
+
+        Log::info('Movie saved', [
+            'id' => $movie->id,
+        ]);
 
         return redirect()->route('movies.index');
     }
@@ -66,29 +71,31 @@ class MovieController extends Controller
         ]);
     }
 
-  public function edit(Movie $movie)
-{
-    $genres = Genre::all();
+    public function edit(Movie $movie)
+    {
+        $genres = Genre::all();
 
-    return view('movies.edit', compact('movie', 'genres'));
-}
+        return view('movies.edit', compact('movie', 'genres'));
+    }
 
     public function update(Request $request, Movie $movie)
+    {
+        $validated = $request->validate([
+            'title'    => 'required',
+            'director' => 'required',
+            'year'     => 'required|integer',
+            'genre_id' => 'required|exists:genres,id',
+        ]);
+
+        $movie->update($validated);
+
+        return redirect()->route('movies.index');
+    }
+
+   public function destroy(Movie $movie)
 {
-    $validated = $request->validate([
-        'title'    => 'required',
-        'director' => 'required',
-        'year'     => 'required|integer',
-        'genre_id' => 'required|exists:genres,id',
-    ]);
+    abort_if($movie->genre->movies()->count() === 1, 403);
 
-    $movie->update($validated);
-
-    return redirect()->route('movies.index');
-}
-
-    public function destroy(Movie $movie)
-{
     $movie->delete();
 
     return redirect()->route('movies.index');
